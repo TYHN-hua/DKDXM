@@ -5,19 +5,19 @@ export default {
   component: Layout,
   redirect: '/repairOrder/operating',
   name: 'repairorder',
-  meta: { title: '工单管理', icon: 'el-icon-s-help' },
+  meta: { title: '工单管理', icon: 'form' },
   children: [
     {
       path: 'operating',
       name: 'operating',
       component: () => import('@/views/repairOrder/components/operating'),
-      meta: { title: '运营工单', icon: 'table' }
+      meta: { title: '运营工单' }
     },
     {
       path: 'operations',
       name: 'operations',
       component: () => import('@/views/repairOrder/components/operations'),
-      meta: { title: '运维工单', icon: 'tree' }
+      meta: { title: '运维工单' }
     }
   ]
 }

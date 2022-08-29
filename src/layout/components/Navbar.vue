@@ -58,11 +58,11 @@ export default {
   height: 50px;
   overflow: hidden;
   position: relative;
-  background: #fff;
+  background:url('../../assets/images/navbar.png');
   box-shadow: 0 1px 4px rgba(0,21,41,.08);
 
   .hamburger-container {
-    line-height: 46px;
+    line-height: 50px;
     height: 100%;
     float: left;
     cursor: pointer;
@@ -70,7 +70,7 @@ export default {
     -webkit-tap-highlight-color:transparent;
 
     &:hover {
-      background: rgba(0, 0, 0, .025)
+      background: rgba(0, 0, 0, .025);
     }
   }
 
@@ -109,22 +109,29 @@ export default {
       margin-right: 30px;
 
       .avatar-wrapper {
-        margin-top: 5px;
         position: relative;
+        display: flex;
+        align-items: center;
 
         .user-avatar {
           cursor: pointer;
           width: 40px;
           height: 40px;
-          border-radius: 10px;
+          margin-right: 20px;
+          border-radius: 40px;
+        }
+        span {
+          color: #fff;
+          font-size: 16px;
         }
 
         .el-icon-caret-bottom {
           cursor: pointer;
           position: absolute;
           right: -20px;
-          top: 25px;
-          font-size: 12px;
+          top: 16px;
+          font-size: 16px;
+          color: #fff;
         }
       }
     }

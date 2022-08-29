@@ -7,6 +7,6 @@ export default {
     name: 'reconciliation',
     path: '',
     component: () => import('@/views/reconciliation'),
-    meta: { title: '对账统计', icon: 'el-icon-s-help' }
+    meta: { title: '对账统计', icon: 'money' }
   }]
 }

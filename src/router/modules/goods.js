@@ -5,19 +5,19 @@ export default {
   component: Layout,
   redirect: '/goods/goodstype',
   name: 'goods',
-  meta: { title: '商品管理', icon: 'el-icon-s-help' },
+  meta: { title: '商品管理', icon: 'shopping' },
   children: [
     {
       path: 'goodstype',
       name: 'goodstype',
       component: () => import('@/views/goods/components/goodsType'),
-      meta: { title: '商品类型', icon: 'table' }
+      meta: { title: '商品类型' }
     },
     {
       path: 'goodsmanagement',
       name: 'goodsmanagement',
       component: () => import('@/views/goods/components/goodsManagement'),
-      meta: { title: '商品管理', icon: 'tree' }
+      meta: { title: '商品管理' }
     }
   ]
 }

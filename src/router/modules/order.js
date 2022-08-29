@@ -7,6 +7,6 @@ export default {
     name: 'order',
     path: '',
     component: () => import('@/views/order'),
-    meta: { title: '订单管理', icon: 'el-icon-s-help' }
+    meta: { title: '订单管理', icon: 'skill' }
   }]
 }

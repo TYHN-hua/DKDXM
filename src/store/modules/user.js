@@ -1,4 +1,4 @@
-import { login } from '@/api/user'
+import { login, getUserInfo } from '@/api/user'
 import { setToken, getToken, removeToken } from '@/utils/auth'
 
 export default {
@@ -36,6 +36,11 @@ export default {
       console.log(res) // token
       commit('setHrsaasTime', Date.now())
       commit('setToken', res)
+    },
+
+    async getUserInfo() {
+      const res = await getUserInfo()
+      console.log(res)
     },
     // 通过接口获取用户信息
     // token 到底 验证

@@ -7,7 +7,7 @@ export default {
   name: 'people',
   meta: {
     title: '人员管理',
-    icon: 'nested'
+    icon: 'people'
   },
   children: [
     {
