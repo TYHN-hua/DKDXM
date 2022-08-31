@@ -36,6 +36,7 @@ export default {
       console.log(res) // token
       commit('setHrsaasTime', Date.now())
       commit('setToken', res)
+      commit('setUserInfo', data)
     },
     // 通过接口获取用户信息
     // token 到底 验证
