@@ -10,8 +10,13 @@ import store from './store'
 
 const whiteList = ['/login', '/404']
 
-router.beforeEach((to, from, next) => {
+router.beforeEach(async(to, from, next) => {
   if (store.getters.token) {
+    // token 存在的时候 调用 获取用户资料
+    // 先看一下 用户资料 是否拿到
+    if (!store.getters.userId) {
+      await store.dispatch('user/getUserInfo')
+    }
     if (to.path === '/login') {
       next('/')
     } else {

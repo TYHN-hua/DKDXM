@@ -5,7 +5,7 @@ export default {
   namespaced: true,
   state: {
     token: getToken(),
-    userInfo: {}, // null
+    userId: null,
     hrsaasTime: ''
   },
   mutations: {
@@ -17,9 +17,9 @@ export default {
       state.token = null
       removeToken()
     },
-    setUserInfo(state, userInfo) {
+    setUserInfo(state, userId) {
       // state.userInfo = { ...userInfo } //   浅拷贝
-      state.userInfo = JSON.parse(JSON.stringify(userInfo))
+      state.userId = userId
     },
     removeUserInfo(state) {
       state.userInfo = {}
@@ -35,11 +35,12 @@ export default {
       const res = await login(data)
       console.log(res) // token
       commit('setHrsaasTime', Date.now())
-      commit('setToken', res)
+      commit('setToken', res.data.token)
+      commit('setUserInfo', res.data.userId)
     },
 
     async getUserInfo() {
-      const res = await getUserInfo()
+      const res = await getUserInfo(1)
       console.log(res)
     },
     // 通过接口获取用户信息

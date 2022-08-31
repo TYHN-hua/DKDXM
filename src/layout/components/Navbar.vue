@@ -6,12 +6,10 @@
       <el-dropdown class="avatar-container" trigger="click">
         <div class="avatar-wrapper">
           <img
-            v-imgerror="defaultImg"
-            :src="staffPhoto"
             class="user-avatar"
           >
           <!-- onerror -->
-          <span>欢迎您，{{ username }}</span>
+          <span>欢迎您，</span>
           <i class="el-icon-caret-bottom" />
         </div>
         <el-dropdown-menu slot="dropdown" class="user-dropdown">
