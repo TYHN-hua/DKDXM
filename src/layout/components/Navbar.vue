@@ -9,7 +9,7 @@
             class="user-avatar"
           >
           <!-- onerror -->
-          <span>欢迎您，</span>
+          <span>欢迎您,</span>
           <i class="el-icon-caret-bottom" />
         </div>
         <el-dropdown-menu slot="dropdown" class="user-dropdown">
@@ -36,7 +36,8 @@ export default {
   computed: {
     ...mapGetters([
       'sidebar',
-      'avatar'
+      'avatar',
+      'userName'
     ])
   },
   methods: {

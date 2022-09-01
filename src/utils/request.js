@@ -2,7 +2,7 @@ import axios from 'axios'
 // import { Message } from 'element-ui'
 import store from '@/store'
 import router from '@/router'
-const timeout = 1 // 10*60*60 == 36000 s
+const timeout = 10 // 10*60*60 == 36000 s
 // 定义超时时间
 // 封装判断时间否是超时的函数
 function isCheckOut() {

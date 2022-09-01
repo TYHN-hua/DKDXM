@@ -17,11 +17,3 @@ export function login(data) {
     data
   })
 }
-
-// 获取用户基本信息
-export function getUserInfo(id) {
-  return request({
-    method: 'GET',
-    url: `/user-service/user/${id}`
-  })
-}
