@@ -35,7 +35,7 @@ export default {
       const res = await login(data)
       console.log(res) // token
       commit('setHrsaasTime', Date.now())
-      commit('setToken', res)
+      commit('setToken', res.data.token)
       commit('setUserInfo', data)
     },
     // 通过接口获取用户信息

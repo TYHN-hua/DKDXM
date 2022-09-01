@@ -1,7 +1,7 @@
 <template>
   <div>
     <peopleSearch />
-    <list :people-list="peopleList" :page="page" />
+    <list :people-list="peopleList" :page.sync="page" />
   </div>
 </template>
 
@@ -17,8 +17,13 @@ export default {
   },
   data() {
     return {
-      peopleList: [],
+
       page: {}
+    }
+  },
+  watch: {
+    'page.pageIndex': function(newval) {
+      this.getPeopleList()
     }
   },
   mounted() {
@@ -26,7 +31,7 @@ export default {
   },
   methods: {
     async getPeopleList() {
-      const { data } = await getPeopleList(this.$store.state.userInfo)
+      const { data } = await getPeopleList(this.page, this.$store.state.userInfo)
       this.peopleList = data.currentPageRecords
       this.page = {
         pageIndex: data.pageIndex,
@@ -37,6 +42,9 @@ export default {
       }
       console.log(this.page)
     }
+  },
+  async page() {
+    this.getPeopleList()
   }
 }
 </script>
@@ -44,5 +52,6 @@ export default {
 <style lang="scss" scoped>
 .el-card {
   margin: 20px;
+
 }
 </style>

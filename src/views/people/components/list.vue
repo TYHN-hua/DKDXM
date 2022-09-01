@@ -42,7 +42,10 @@
       :total="page.totalCount"
     /> -->
     <el-row style="margin-top:10px;padding-left:20px" type="flex" justify="space-between"><span style="color:#dddfe5">共{{ page.totalCount }}条记录 第 {{ page.pageIndex }} / {{ page.totalPage }} 页</span>
-      <span><el-button size="small">上一页</el-button> <el-button size="small">下一页</el-button></span></el-row>
+      <span>
+        <el-button size="small" :disabled="page.pageIndex == 1? true:false" @click="lastPage">上一页</el-button>
+        <el-button size="small" :disabled="page.pageIndex == page.totalPage? true:false" @click="nextPage">下一页</el-button>
+      </span></el-row>
   </el-card>
 </template>
 
@@ -61,7 +64,7 @@ export default {
   },
   data() {
     return {
-      page1: this.page
+
     }
   },
   methods: {
@@ -70,6 +73,14 @@ export default {
     },
     handleCurrentChange(val) {
       this.currentRow = val
+    },
+    lastPage() {
+      this.page.pageIndex = this.page.pageIndex * 1 - 1
+      this.$emit('update:page', this.page)
+    },
+    nextPage() {
+      this.page.pageIndex = this.page.pageIndex * 1 + 1
+      this.$emit('update:page', this.page)
     }
   }
 }

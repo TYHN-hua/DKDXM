@@ -46,7 +46,8 @@ export default {
     ...mapGetters([
       'sidebar',
       'avatar',
-      ''
+      'username',
+      'staffPhoto'
     ])
   },
   methods: {
