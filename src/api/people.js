@@ -27,3 +27,11 @@ export function addPeople(data) {
     data
   })
 }
+
+// 删除人员
+export function delPeople(id) {
+  return request({
+    url: `user-service/user/${id}`,
+    method: 'DELETE'
+  })
+}

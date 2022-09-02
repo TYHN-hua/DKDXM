@@ -31,9 +31,12 @@
       />
       <el-table-column
         label="操作"
+        prop="id"
       >
-        <el-button size="small" style="border:unset;color:#6085ff;background-color:unset">修改</el-button>
-        <el-button size="small" style="border:unset;color:#ff5a5a;background-color:unset">删除</el-button>
+        <template slot-scope="scope">
+          <el-button size="small" style="border:unset;color:#6085ff;background-color:unset">修改</el-button>
+          <el-button size="small" style="border:unset;color:#ff5a5a;background-color:unset" @click="delPeople(scope.row.id)">删除</el-button>
+        </template>
       </el-table-column>
     </el-table>
     <!-- <el-pagination
@@ -52,7 +55,7 @@
 
 <script>
 import addPeople from './addPeople.vue'
-import { getRole } from '@/api/people'
+import { getRole, delPeople } from '@/api/people'
 import { getAreaList } from '@/api/area'
 export default {
   name: 'List',
@@ -87,11 +90,11 @@ export default {
     },
     lastPage() {
       this.page.pageIndex = (this.page.pageIndex * 1 - 1).toString()
-      this.$emit('update:page', this.page)
+      // this.$emit('update:page', this.page)
     },
     nextPage() {
       this.page.pageIndex = (this.page.pageIndex * 1 + 1).toString()
-      this.$emit('update:page', this.page)
+      // this.$emit('update:page', this.page)
     },
     async showAddPeople() {
       this.showDialog = true
@@ -102,6 +105,17 @@ export default {
         pageSize: '99999'
       })
       this.regionList = currentPageRecords
+      // console.log(this.regionList)
+    },
+    async delPeople(id) {
+      try {
+        await delPeople(id)
+        if (this.peopleList.length - 1 === 0) {
+          this.page.pageIndex = (this.page.pageIndex * 1 - 1).toString()
+        }
+      } catch (e) {
+        console.log(e)
+      }
     }
   }
 }

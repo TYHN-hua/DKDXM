@@ -1,7 +1,7 @@
 <template>
   <div>
     <peopleSearch />
-    <list ref="list" :people-list="peopleList" :page.sync="page" />
+    <list ref="list" :people-list="peopleList" :page.sync="page" @refresh="refresh" />
 
   </div>
 </template>
@@ -32,6 +32,11 @@ export default {
   mounted() {
     this.getPeopleList()
   },
+  provide() {
+    return {
+      getPeopleList: this.getPeopleList
+    }
+  },
   methods: {
     async getPeopleList() {
       try {
@@ -44,16 +49,19 @@ export default {
           totalPage: data.totalPage
 
         }
-        // console.log(this.page)
+        console.log(data)
       } catch (e) {
         console.log(e)
       }
+    },
+    refresh(val) {
+      if (val) {
+        this.page.pageIndex = this.page.pageIndex - 1
+      }
+      this.getPeopleList()
     }
-  },
-  async page(msg) {
-    console.log(msg)
-    this.getPeopleList()
   }
+
 }
 </script>
 

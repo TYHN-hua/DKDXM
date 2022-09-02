@@ -6,7 +6,12 @@
       width="60%"
       :before-close="handleClose"
     >
-      <el-form ref="addForm" label-width="100px" :model="formData">
+      <el-form
+        ref="addForm"
+        label-width="100px"
+        :model="formData"
+        :rules="rules"
+      >
         <el-form-item label="人员名称：" prop="userName">
           <el-input
             v-model="formData.userName"
@@ -14,32 +19,38 @@
             show-word-limit
           />
         </el-form-item>
-        <el-form-item label="角色：" prop="role">
-          <el-select v-model="formData.roleid" placeholder="请选择" style="width:100%">
-            <el-option v-for="item in roleList" :key="item.roleId" :label="item.roleName" :value="item.roleCode" />
+        <el-form-item label="角色：" prop="roleId">
+          <el-select v-model="formData.roleId" placeholder="请选择" style="width:100%">
+            <el-option
+              v-for="item in roleList"
+              :key="item.roleId"
+              :label="item.roleName"
+              :value="item.roleId"
+              @click.native="getRoleId(item.roleId)"
+            />
 
           </el-select>
         </el-form-item>
-        <el-form-item label="联系电话：">
+        <el-form-item label="联系电话：" prop="mobile">
           <el-input
             v-model="formData.mobile"
             maxlength="11"
             show-word-limit
           />
         </el-form-item>
-        <el-form-item label="负责区域：" prop="area">
+        <el-form-item label="负责区域：" prop="regionName">
           <el-select v-model="formData.regionName" placeholder="请选择" style="width:100%">
             <el-option
               v-for="item in regionList"
               :key="item.id"
               :label="item.name"
               :value="item.name"
-              @click.native="getRoleId(item.id)"
+              @click.native="getRegionId(item.id)"
             />
 
           </el-select>
         </el-form-item>
-        <el-form-item label="头像">
+        <el-form-item label="头像" prop="image">
           <el-upload
             v-loading="loading"
             element-loading-text="拼命加载中"
@@ -66,7 +77,7 @@
       </el-form>
       <span slot="footer" class="dialog-footer">
         <el-button @click="handleClose">取 消</el-button>
-        <el-button type="primary" @click="sureAdd">确 定</el-button>
+        <el-button v-loading="loading" type="primary" @click="sureAdd">确 定</el-button>
       </span>
     </el-dialog>
   </div>
@@ -107,9 +118,29 @@ export default {
       },
       loading: false,
       fileList: [],
-      limit: 1
+      limit: 1,
+      rules: {
+        userName: [
+          { required: true, message: '请输入用户名', trigger: 'blur' }
+        ],
+        roleId: [
+          { required: true, message: '请选择角色', trigger: 'change' }
+        ],
+        mobile: [
+          { required: true, message: '请输入手机号码', trigger: 'blur' },
+          { pattern: /^(?:(?:\+|00)86)?1(?:(?:3[\d])|(?:4[5-79])|(?:5[0-35-9])|(?:6[5-7])|(?:7[0-8])|(?:8[\d])|(?:9[189]))\d{8}$/, message: '请输入正确格式手机号', trigger: 'blur' }
+        ],
+        regionName: [
+          { required: true, message: '请选择区域', trigger: 'change' }
+        ],
+        image: [
+          { required: true, message: '请上传头像', trigger: 'change' }
+        ]
+
+      }
     }
   },
+  inject: ['getPeopleList'],
   methods: {
     onChange(file, fileList) {
       // file 当前上传的图片
@@ -173,17 +204,32 @@ export default {
         mobile: '',
         regionId: '',
         regionName: '',
-        imgUrl: '',
+        image: '',
         status: false
       }
+      this.fileList = []
       this.$emit('update:showDialog', false)
+    },
+    getRegionId(id) {
+      this.formData.regionId = id
     },
     getRoleId(id) {
       this.formData.roleId = id
     },
     async sureAdd() {
-      const res = await addPeople(this.formData)
-      console.log(res)
+      try {
+        await this.$refs.addForm.validate()
+        this.loading = true
+        await addPeople(this.formData)
+        this.getPeopleList()
+        this.handleClose()
+        this.$message.success('添加成功')
+      } catch (e) {
+        this.$message.error('请重试')
+        console.log(e)
+      } finally {
+        this.loading = false
+      }
     }
 
   }
