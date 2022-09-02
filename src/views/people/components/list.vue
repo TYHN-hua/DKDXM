@@ -1,6 +1,6 @@
 <template>
   <el-card>
-    <el-button type="primary" icon="el-icon-circle-plus-outline" size="medium" style="background-color:#ff6c28">新建</el-button>
+    <el-button type="primary" icon="el-icon-circle-plus-outline" size="medium" style="background-color:#ff6c28" @click="showAddPeople">新建</el-button>
     <el-table
       :data="peopleList"
       style="width: 100%"
@@ -46,12 +46,19 @@
         <el-button size="small" :disabled="page.pageIndex == 1? true:false" @click="lastPage">上一页</el-button>
         <el-button size="small" :disabled="page.pageIndex == page.totalPage? true:false" @click="nextPage">下一页</el-button>
       </span></el-row>
+    <addPeople :show-dialog.sync="showDialog" :role-list="roleList" :region-list="regionList" />
   </el-card>
 </template>
 
 <script>
+import addPeople from './addPeople.vue'
+import { getRole } from '@/api/people'
+import { getAreaList } from '@/api/area'
 export default {
   name: 'List',
+  components: {
+    addPeople
+  },
   props: {
     peopleList: {
       type: Array,
@@ -62,9 +69,13 @@ export default {
       default: () => ({})
     }
   },
+
   data() {
     return {
 
+      showDialog: false,
+      roleList: [],
+      regionList: []
     }
   },
   methods: {
@@ -75,12 +86,22 @@ export default {
       this.currentRow = val
     },
     lastPage() {
-      this.page.pageIndex = this.page.pageIndex * 1 - 1
+      this.page.pageIndex = (this.page.pageIndex * 1 - 1).toString()
       this.$emit('update:page', this.page)
     },
     nextPage() {
-      this.page.pageIndex = this.page.pageIndex * 1 + 1
+      this.page.pageIndex = (this.page.pageIndex * 1 + 1).toString()
       this.$emit('update:page', this.page)
+    },
+    async showAddPeople() {
+      this.showDialog = true
+      const { data } = await getRole(this.$store.state.user.userInfo)
+      this.roleList = data
+      const { data: { currentPageRecords }} = await getAreaList({
+        pageIndex: '1',
+        pageSize: '99999'
+      })
+      this.regionList = currentPageRecords
     }
   }
 }

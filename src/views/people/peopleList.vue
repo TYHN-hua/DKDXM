@@ -1,12 +1,14 @@
 <template>
   <div>
     <peopleSearch />
-    <list :people-list="peopleList" :page.sync="page" />
+    <list ref="list" :people-list="peopleList" :page.sync="page" />
+
   </div>
 </template>
 
 <script>
 import peopleSearch from './components/peopleSearch.vue'
+
 import list from './components/list.vue'
 import { getPeopleList } from '@/api/people'
 export default {
@@ -14,10 +16,11 @@ export default {
   components: {
     peopleSearch,
     list
+
   },
   data() {
     return {
-
+      peopleList: [],
       page: {}
     }
   },
@@ -31,19 +34,24 @@ export default {
   },
   methods: {
     async getPeopleList() {
-      const { data } = await getPeopleList(this.page, this.$store.state.userInfo)
-      this.peopleList = data.currentPageRecords
-      this.page = {
-        pageIndex: data.pageIndex,
-        pageSize: data.pageSize,
-        totalCount: data.totalCount,
-        totalPage: data.totalPage
+      try {
+        const { data } = await getPeopleList(this.page, this.$store.state.userInfo)
+        this.peopleList = data.currentPageRecords
+        this.page = {
+          pageIndex: data.pageIndex,
+          pageSize: data.pageSize,
+          totalCount: data.totalCount,
+          totalPage: data.totalPage
 
+        }
+        // console.log(this.page)
+      } catch (e) {
+        console.log(e)
       }
-      console.log(this.page)
     }
   },
-  async page() {
+  async page(msg) {
+    console.log(msg)
     this.getPeopleList()
   }
 }

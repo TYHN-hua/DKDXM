@@ -1,11 +1,11 @@
 import { login } from '@/api/user'
-import { setToken, getToken, removeToken } from '@/utils/auth'
+import { setToken, getToken, removeToken, getUserInfo, setUserInfo } from '@/utils/auth'
 
 export default {
   namespaced: true,
   state: {
     token: getToken(),
-    userInfo: {}, // null
+    userInfo: getUserInfo(), // null
     hrsaasTime: ''
   },
   mutations: {
@@ -19,7 +19,8 @@ export default {
     },
     setUserInfo(state, userInfo) {
       // state.userInfo = { ...userInfo } //   浅拷贝
-      state.userInfo = JSON.parse(JSON.stringify(userInfo))
+      state.userInfo = userInfo
+      setUserInfo(userInfo)
     },
     removeUserInfo(state) {
       state.userInfo = {}

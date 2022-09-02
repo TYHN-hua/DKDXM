@@ -109,6 +109,7 @@ export default {
     async login() {
       try {
         await this.$refs.loginForm.validate()
+        // this.$store.commit('user/setUserInfo', this.loginForm)
         this.loading = true
         await this.$store.dispatch('user/login', this.loginForm)
         this.$router.push('/')
