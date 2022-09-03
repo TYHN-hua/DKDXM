@@ -113,6 +113,7 @@ export default {
         if (this.peopleList.length - 1 === 0) {
           this.page.pageIndex = (this.page.pageIndex * 1 - 1).toString()
         }
+        this.$parent.getPeopleList()
       } catch (e) {
         console.log(e)
       }
