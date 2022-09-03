@@ -1,7 +1,7 @@
 <template>
   <div>
     <el-dialog
-      title="新增人员"
+      :title="`${isAdd ? '新增' : '编辑'}人员`"
       :visible.sync="showDialog"
       width="60%"
       :before-close="handleClose"
@@ -85,7 +85,7 @@
 
 <script>
 import COS from 'cos-js-sdk-v5'
-import { addPeople } from '@/api/people'
+import { addPeople, editPeopleDetailById } from '@/api/people'
 const cos = new COS({
   SecretId: 'AKIDqVv4vVosoTr0rRkmX2GL9gwve5F8l7By',
   SecretKey: 'Zrsc4GBpERP7YjdGchW4LL5YkfKkAKDq'
@@ -107,6 +107,8 @@ export default {
   },
   data() {
     return {
+      isAdd: true,
+      id: null,
       formData: {
         userName: '',
         roleId: '',
@@ -220,10 +222,14 @@ export default {
       try {
         await this.$refs.addForm.validate()
         this.loading = true
-        await addPeople(this.formData)
+        if (this.isAdd) {
+          await addPeople(this.formData)
+        } else {
+          await editPeopleDetailById(this.formData.userId, this.formData)
+        }
         this.getPeopleList()
         this.handleClose()
-        this.$message.success('添加成功')
+        this.$message.success('成功')
       } catch (e) {
         this.$message.error('请重试')
         console.log(e)

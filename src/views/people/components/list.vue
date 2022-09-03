@@ -34,7 +34,7 @@
         prop="id"
       >
         <template slot-scope="scope">
-          <el-button size="small" style="border:unset;color:#6085ff;background-color:unset">修改</el-button>
+          <el-button size="small" style="border:unset;color:#6085ff;background-color:unset" @click="editPeople(scope.row.id)">修改</el-button>
           <el-button size="small" style="border:unset;color:#ff5a5a;background-color:unset" @click="delPeople(scope.row.id)">删除</el-button>
         </template>
       </el-table-column>
@@ -49,13 +49,13 @@
         <el-button size="small" :disabled="page.pageIndex == 1? true:false" @click="lastPage">上一页</el-button>
         <el-button size="small" :disabled="page.pageIndex == page.totalPage? true:false" @click="nextPage">下一页</el-button>
       </span></el-row>
-    <addPeople :show-dialog.sync="showDialog" :role-list="roleList" :region-list="regionList" />
+    <addPeople ref="editPeople" :show-dialog.sync="showDialog" :role-list="roleList" :region-list="regionList" />
   </el-card>
 </template>
 
 <script>
 import addPeople from './addPeople.vue'
-import { getRole, delPeople } from '@/api/people'
+import { getRole, delPeople, getPeopleDetailById } from '@/api/people'
 import { getAreaList } from '@/api/area'
 export default {
   name: 'List',
@@ -109,6 +109,7 @@ export default {
     },
     async delPeople(id) {
       try {
+        await this.$confirm('确定删除吗', '提示', { type: 'warning' })
         await delPeople(id)
         if (this.peopleList.length - 1 === 0) {
           this.page.pageIndex = (this.page.pageIndex * 1 - 1).toString()
@@ -117,6 +118,15 @@ export default {
       } catch (e) {
         console.log(e)
       }
+    },
+    async editPeople(id) {
+      const res = await getPeopleDetailById(id)
+      this.showDialog = true
+      this.$refs.editPeople.formData = res.data
+      this.$refs.editPeople.isAdd = false
+      this.$refs.editPeople.id = id
+      this.showAddPeople()
+      console.log(res)
     }
   }
 }

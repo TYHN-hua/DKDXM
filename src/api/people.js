@@ -35,3 +35,19 @@ export function delPeople(id) {
     method: 'DELETE'
   })
 }
+
+// 根据id 获取人员信息
+export function getPeopleDetailById(id) {
+  return request({
+    url: `user-service/user/${id}`
+  })
+}
+
+// 根据id 修改人员信息
+export function editPeopleDetailById(id, data) {
+  return request({
+    url: `user-service/user/${id}`,
+    method: 'PUT',
+    data
+  })
+}
