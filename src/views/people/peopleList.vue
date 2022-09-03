@@ -1,7 +1,7 @@
 <template>
   <div>
-    <peopleSearch />
-    <list ref="list" :people-list="peopleList" :page.sync="page" @refresh="refresh" />
+    <peopleSearch @search="search" />
+    <list ref="list" :people-list="peopleList" :page.sync="page" />
 
   </div>
 </template>
@@ -54,10 +54,14 @@ export default {
         console.log(e)
       }
     },
-    refresh(val) {
-      if (val) {
-        this.page.pageIndex = this.page.pageIndex - 1
-      }
+    // refresh(val) {
+    //   if (val) {
+    //     this.page.pageIndex = this.page.pageIndex - 1
+    //   }
+    //   this.getPeopleList()
+    // },
+    search(val) {
+      this.page.userName = val
       this.getPeopleList()
     }
   }
