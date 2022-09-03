@@ -1,10 +1,16 @@
 <template>
-  <div>人效统计</div>
+  <div>
+    <card />
+  </div>
 </template>
 
 <script>
+import card from './components/card.vue'
 export default {
-  name: 'PeopleWorkStatistics'
+  name: 'PeopleWorkStatistics',
+  components: {
+    card
+  }
 }
 </script>
 
