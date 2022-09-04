@@ -28,10 +28,17 @@
 <script>
 import { mapGetters } from 'vuex'
 import Hamburger from '@/components/Hamburger'
+import defaultImg from '@/assets/common/head.jpg'
 
 export default {
   components: {
     Hamburger
+
+  },
+  data() {
+    return {
+      defaultImg
+    }
   },
   computed: {
     ...mapGetters([

@@ -19,7 +19,7 @@ const service = axios.create({
 
 // // request interceptor
 service.interceptors.request.use(config => {
-  console.log(config)
+  // console.log(config)
   // config.headers 加一个验证的字段
   // Authorization = Bearer+空格+token
   if (store.getters.token) { // token存在

@@ -1,11 +1,11 @@
 import { login } from '@/api/user'
-import { setToken, getToken, removeToken } from '@/utils/auth'
+import { setToken, getToken, removeToken, getUserInfo, setUserInfo } from '@/utils/auth'
 
 export default {
   namespaced: true,
   state: {
     token: getToken(),
-    userInfo: {},
+    userInfo: getUserInfo(), // null
     hrsaasTime: ''
   },
   mutations: {
@@ -20,6 +20,7 @@ export default {
     setUserInfo(state, userInfo) {
       // state.userInfo = { ...userInfo } //   浅拷贝
       state.userInfo = userInfo
+      setUserInfo(userInfo)
     },
     removeUserInfo(state) {
       state.userInfo = {}
@@ -36,7 +37,7 @@ export default {
       console.log(res) // token
       commit('setHrsaasTime', Date.now())
       commit('setToken', res.data.token)
-      commit('setUserInfo', res.data.userInfo)
+      commit('setUserInfo', data)
     },
     // 通过接口获取用户信息
     // token 到底 验证
