@@ -12,19 +12,19 @@ export default {
   children: [
     {
       path: 'management',
-      component: () => import('@/views/equipment/components/management'), // Parent router-view
+      component: () => import('@/views/equipment/management'), // Parent router-view
       name: 'management',
       meta: { title: '设备管理' }
     },
     {
       path: 'equipmentstate',
-      component: () => import('@/views/equipment/components/EquipmentState'), // Parent router-view
+      component: () => import('@/views/equipment/EquipmentState'), // Parent router-view
       name: 'equipmentstate',
       meta: { title: '设备状态' }
     },
     {
       path: 'devicetype',
-      component: () => import('@/views/equipment/components/deviceType'), // Parent router-view
+      component: () => import('@/views/equipment/deviceType'), // Parent router-view
       name: 'devicetype',
       meta: { title: '设备类型管理' }
     }
