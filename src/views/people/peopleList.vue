@@ -11,6 +11,7 @@ import peopleSearch from './components/peopleSearch.vue'
 
 import list from './components/list.vue'
 import { getPeopleList } from '@/api/people'
+
 export default {
   name: 'PeopleList',
   components: {

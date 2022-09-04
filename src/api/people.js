@@ -51,3 +51,10 @@ export function editPeopleDetailById(id, data) {
     data
   })
 }
+
+// 获取当天总计
+export function getRepairTotal(start, end) {
+  return request({
+    url: `/task-service/task/taskReportInfo/${start}/${end}`
+  })
+}
