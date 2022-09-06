@@ -2,7 +2,7 @@
   <el-dialog
     title="人员详情"
     :visible.sync="showDialog"
-    width="50%"
+    width="30%"
     :before-close="handleClose"
   >
     <div class="descriptions">
@@ -16,6 +16,36 @@
         </el-descriptions>
       </span>
     </div>
+    <el-table
+      ref="singleTable"
+      highlight-current-row
+      style="width: 100%"
+    >
+      <!-- :data="tableData"
+      @current-change="handleCurrentChange" -->
+      <el-table-column
+        type="index"
+        width="50"
+      />
+      <el-table-column
+        property="date"
+        label="总工单数"
+        width="120"
+      />
+      <el-table-column
+        property="name"
+        label="拒绝工单"
+        width="120"
+      />
+      <el-table-column
+        property="address"
+        label="完成工单"
+      />
+      <el-table-column
+        property="address"
+        label="进行中工单"
+      />
+    </el-table>
     <span slot="footer" class="dialog-footer">
       <el-button @click="handleClose">取 消</el-button>
       <el-button type="primary">确 定</el-button>

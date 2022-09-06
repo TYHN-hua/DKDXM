@@ -1,6 +1,5 @@
 <template>
   <el-card>
-    <!-- <el-button type="primary" icon="el-icon-circle-plus-outline" size="medium" style="background-color:#ff6c28" @click="showAddPeople">新建</el-button> -->
     <el-table
       :data="listData"
       style="width: 100%"
@@ -44,7 +43,6 @@
       >
         <template slot-scope="scope">
           <el-button size="small" style="border:unset;color:#6085ff;background-color:unset" @click="getPeopleInfo(scope.row.userId)">查看详情</el-button>
-          <!-- <el-button size="small" style="border:unset;color:#ff5a5a;background-color:unset" @click="delPeople(scope.row.id)">删除</el-button> -->
         </template>
       </el-table-column>
     </el-table>
@@ -58,7 +56,6 @@
         <el-button size="small" :disabled="page.pageIndex == 1? true:false" @click="lastPage">上一页</el-button>
         <el-button size="small" :disabled="page.pageIndex == page.totalPage? true:false" @click="nextPage">下一页</el-button>
       </span></el-row>
-    <!-- <addPeople ref="editPeople" :show-dialog.sync="showDialog" :role-list="roleList" :region-list="regionList" /> -->
     <peopleDetail :show-dialog.sync="showDialog" :user-info="userInfo" />
   </el-card>
 </template>
@@ -66,8 +63,9 @@
 <script>
 import peopleDetail from './peopleDetail.vue'
 
-import { getRole, getPeopleDetailById } from '@/api/people'
-import { getAreaList } from '@/api/area'
+import { getPeopleDetailById, getUserWork } from '@/api/people'
+// import { getAreaList } from '@/api/area'
+import { parseTime } from '@/utils/index'
 export default {
   name: 'List',
   components: {
@@ -86,9 +84,10 @@ export default {
 
   data() {
     return {
-
+      userId: '',
       showDialog: false,
-      userInfo: {}
+      userInfo: {},
+      peopleData: {}
     }
   },
   methods: {
@@ -106,37 +105,65 @@ export default {
       this.page.pageIndex = (this.page.pageIndex * 1 + 1).toString()
       // this.$emit('update:page', this.page)
     },
-    async showAddPeople() {
-      this.showDialog = true
-      const { data } = await getRole(this.$store.state.user.userInfo)
-      this.roleList = data
-      const { data: { currentPageRecords }} = await getAreaList({
-        pageIndex: '1',
-        pageSize: '99999'
-      })
-      this.regionList = currentPageRecords
-      // console.log(this.regionList)
-    },
-    // async delPeople(id) {
-    //   try {
-    //     await this.$confirm('确定删除吗', '提示', { type: 'warning' })
-    //     await delPeople(id)
-    //     if (this.peopleList.length - 1 === 0) {
-    //       this.page.pageIndex = (this.page.pageIndex * 1 - 1).toString()
-    //     }
-    //     this.$parent.getPeopleList()
-    //   } catch (e) {
-    //     console.log(e)
-    //   }
-    // },
+
     async getPeopleInfo(id) {
       const { data } = await getPeopleDetailById(id)
       this.showDialog = true
       // this.$refs.editPeople.formData = res.data
       // this.$refs.editPeople.isAdd = false
       // this.$refs.editPeople.id = id
+      this.userId = id
       this.userInfo = data
-      this.showAddPeople()
+      // this.showAddPeople()
+      // console.log(data)
+      this.getUserWorkAtMonth()
+      this.getUserWorkAtWeek()
+    },
+    async getUserWorkAtMonth() {
+      const year = parseTime(new Date()).slice(0, 4)
+      const month = parseTime(new Date()).slice(5, 7)
+      const days = this.getMonthDays(year, month)
+      const start = year + '-' + month + '-01' + ' 00:00:00'
+      // console.log(start)
+      const end = year + '-' + month + '-' + days + ' 00:00:00'
+      const params = {
+        userId: this.userId,
+        start,
+        end
+      }
+      const { data } = await getUserWork(params)
+      console.log('========', data)
+    },
+    getMonthDays(year, month) {
+      var d = new Date(year, month, 0)
+      return d.getDate()
+    },
+    getFirstDayOfWeek() {
+      const res = parseTime(+new Date()).slice(8, 10)
+      const week = new Date().getDay()
+      // console.log(week)
+      // console.log(parseInt(res))
+      let firstDay = (parseInt(res) - week + 1).toString()
+      // console.log(firstDay)
+      if (firstDay.length === 1) {
+        firstDay = '0' + firstDay
+      }
+      return firstDay
+    },
+    async getUserWorkAtWeek() {
+      const year = parseTime(new Date()).slice(0, 4)
+      const month = parseTime(new Date()).slice(5, 7)
+      const day = parseTime(+new Date()).slice(8, 10)
+      const days = this.getFirstDayOfWeek()
+      const start = year + '-' + month + '-' + days + ' 00:00:00'
+      // console.log(start)
+      const end = year + '-' + month + '-' + day + ' 00:00:00'
+      const params = {
+        userId: this.userId,
+        start,
+        end
+      }
+      const { data } = await getUserWork(params)
       console.log(data)
     }
   }

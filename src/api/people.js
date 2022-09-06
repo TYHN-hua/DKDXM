@@ -60,15 +60,16 @@ export function getRepairTotal(start, end) {
 }
 
 // 获取用户工作量(工单统计)
-export function getUserWork(start, end) {
+export function getUserWork(params) {
   return request({
-    url: `/task-service/task/userWork/${start}/${end}`
+    url: '/task-service/task/userWork',
+    params
 
   })
 }
 
 // 人员工作量列表
-export function getWorkList(start, end) {
+export function getWorkList() {
   return request({
     url: '/user-service/user/searchUserWork'
 
