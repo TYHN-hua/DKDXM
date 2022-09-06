@@ -1,6 +1,9 @@
 <template>
-  <div>
-    <card />
+  <div style="padding-right:20px">
+    <el-row type="flex">
+      <el-col><card ref="yunying" /></el-col>
+      <el-col><card ref="yunwei" /></el-col>
+    </el-row>
   </div>
 </template>
 
@@ -16,7 +19,9 @@ export default {
   data() {
     return {
       startTime: '',
-      endTime: ''
+      endTime: '',
+      yunying: {}
+      // yunwei: {}
     }
   },
 
@@ -29,8 +34,12 @@ export default {
       this.startTime = date + ' 00:00:00'
       this.endTime = date + ' 23:59:59'
       console.log(this.startTime, this.endTime)
-      const res = await getRepairTotal(this.startTime, this.endTime)
-      console.log(res)
+      const { data } = await getRepairTotal(this.startTime, this.endTime)
+      // console.log(data[0])
+      this.$refs.yunying.workData = data[0]
+      this.$refs.yunwei.workData = data[1]
+
+      // this.yunying = data[1]
     }
   }
 }
