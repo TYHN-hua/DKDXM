@@ -20,13 +20,18 @@ export default {
     workList
 
   },
-
   data() {
     return {
       workList: [],
       page: {}
     }
   },
+  watch: {
+    'page.pageIndex': function(newval) {
+      this.getWorkList()
+    }
+  },
+
   created() {
     this.getWorkList()
   },

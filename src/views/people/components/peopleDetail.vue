@@ -20,30 +20,36 @@
       ref="singleTable"
       highlight-current-row
       style="width: 100%"
+      :data="peopleData"
+      border
     >
       <!-- :data="tableData"
       @current-change="handleCurrentChange" -->
       <el-table-column
-        type="index"
         width="50"
+        prop="TT"
       />
       <el-table-column
         property="date"
         label="总工单数"
         width="120"
+        prop="total"
       />
       <el-table-column
         property="name"
         label="拒绝工单"
         width="120"
+        prop="cancelCount"
       />
       <el-table-column
         property="address"
         label="完成工单"
+        prop="workCount"
       />
       <el-table-column
         property="address"
         label="进行中工单"
+        prop="progressTotal"
       />
     </el-table>
     <span slot="footer" class="dialog-footer">
@@ -63,11 +69,22 @@ export default {
     userInfo: {
       type: Object,
       default: () => ({})
+    },
+    peopleData: {
+      type: Array,
+      default: () => ([])
     }
   },
+  data() {
+    return {
+      TT: ['本周', '本月', '本年']
+    }
+  },
+
   methods: {
     handleClose() {
       this.$emit('update:showDialog', false)
+      this.$emit('update:peopleData', [])
     }
   }
 

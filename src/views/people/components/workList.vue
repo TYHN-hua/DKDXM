@@ -56,7 +56,7 @@
         <el-button size="small" :disabled="page.pageIndex == 1? true:false" @click="lastPage">上一页</el-button>
         <el-button size="small" :disabled="page.pageIndex == page.totalPage? true:false" @click="nextPage">下一页</el-button>
       </span></el-row>
-    <peopleDetail :show-dialog.sync="showDialog" :user-info="userInfo" />
+    <peopleDetail :show-dialog.sync="showDialog" :user-info="userInfo" :people-data.sync="peopleData" />
   </el-card>
 </template>
 
@@ -87,7 +87,7 @@ export default {
       userId: '',
       showDialog: false,
       userInfo: {},
-      peopleData: {}
+      peopleData: []
     }
   },
   methods: {
@@ -98,12 +98,12 @@ export default {
       this.currentRow = val
     },
     lastPage() {
-      this.page.pageIndex = (this.page.pageIndex * 1 - 1).toString()
-      // this.$emit('update:page', this.page)
+      const page = (this.page.pageIndex * 1 - 1).toString()
+      this.$emit('update:page', page)
     },
     nextPage() {
-      this.page.pageIndex = (this.page.pageIndex * 1 + 1).toString()
-      // this.$emit('update:page', this.page)
+      const page = (this.page.pageIndex * 1 + 1).toString()
+      this.$emit('update:page', page)
     },
 
     async getPeopleInfo(id) {
@@ -116,8 +116,17 @@ export default {
       this.userInfo = data
       // this.showAddPeople()
       // console.log(data)
-      this.getUserWorkAtMonth()
-      this.getUserWorkAtWeek()
+      await this.getPeopleData()
+    },
+    async getPeopleData() {
+      const week = await this.getUserWorkAtWeek()
+      const month = await this.getUserWorkAtMonth()
+      const year = await this.getUserWorkAtYear()
+      week.TT = '本周'
+      month.TT = '本月'
+      year.TT = '本年'
+      await this.peopleData.push(week, month, year)
+      console.log(this.peopleData)
     },
     async getUserWorkAtMonth() {
       const year = parseTime(new Date()).slice(0, 4)
@@ -132,7 +141,7 @@ export default {
         end
       }
       const { data } = await getUserWork(params)
-      console.log('========', data)
+      return data
     },
     getMonthDays(year, month) {
       var d = new Date(year, month, 0)
@@ -164,7 +173,19 @@ export default {
         end
       }
       const { data } = await getUserWork(params)
-      console.log(data)
+      return data
+    },
+    async getUserWorkAtYear() {
+      const year = parseTime(new Date()).slice(0, 4)
+      const start = year + '-01-01 00:00:00'
+      const end = year + '-12-31 00:00:00'
+      const params = {
+        userId: this.userId,
+        start,
+        end
+      }
+      const { data } = await getUserWork(params)
+      return data
     }
   }
 }
