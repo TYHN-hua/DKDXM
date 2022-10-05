@@ -33,7 +33,7 @@
           <el-table-column prop="vmStatus" label="设备状态" :formatter="formatterFn" />
           <el-table-column label="操作" show-overflow-tooltip>
             <template slot-scope="{ row }">
-              <el-button type="text" size="small">货道</el-button>
+              <el-button type="text" size="small" @click="aisleBtn(row.innerCode)">货道</el-button>
               <el-button type="text" size="small" @click="strategyBtn(row.innerCode)">策略</el-button>
               <el-button type="text" size="small" @click="changeEquipment(row)">修改</el-button>
             </template>
@@ -42,28 +42,31 @@
       </el-row>
     </el-card>
     <el-card>
-      <myPagination :total="totalCount" :current-page="currentPage" @changePageEvent="changePage" />
+      <myPagination v-if="isShow" v-loading="loading" :total="totalCount" :current-page="currentPage" @changePageEvent="changePage" />
     </el-card>
     <addEquipment :dialog-visible.sync="dialogVisible" />
     <strategy :dialog-visibled.sync="dialogVisibled" :dialog-visibledd.sync="dialogVisibledd" :inner-code-list="innerCodeList" :policy="policy" />
     <changeEquipment :dialog-visibleed.sync="dialogVisibleed" :equipment="equipment" />
+    <setAisle :outer-visible.sync="outerVisible" :channel-list="channelList" :business-id="businessId" />
   </div>
 </template>
 
 <script>
-import { getEquipmentList, getEquipmentPolicy } from '@/api/equipment'
+import { getEquipmentList, getEquipmentPolicy, getAisle } from '@/api/equipment'
 import Equipment from '@/api/constant/equipment'
 import myPagination from '@/components/myPagination/index.vue'
 import addEquipment from './components/addEquipment.vue'
 import strategy from './components/strategy.vue'
 import changeEquipment from './components/changeEquipment.vue'
+import setAisle from './components/setAisle.vue'
 export default {
   name: 'Management',
   components: {
     myPagination,
     addEquipment,
     strategy,
-    changeEquipment
+    changeEquipment,
+    setAisle
   },
   data() {
     return {
@@ -72,13 +75,18 @@ export default {
       totalCount: 0,
       pageIndex: 1,
       currentPage: 1,
+      isShow: true,
+      loading: false,
       dialogVisible: false,
       dialogVisibled: false,
       dialogVisibledd: false,
       dialogVisibleed: false,
       innerCodeList: [],
       policy: {},
-      equipment: {}
+      equipment: {},
+      outerVisible: false,
+      channelList: [],
+      businessId: 1
     }
   },
   mounted() {
@@ -88,10 +96,11 @@ export default {
     // 渲染主页面
     async getEquipmentList() {
       const res = await getEquipmentList({ pageIndex: this.pageIndex })
-      // console.log(res)
+      console.log(res)
       this.List = res.data.currentPageRecords
+      this.businessId = Number(res.data.currentPageRecords.node.businessType.id)
       this.totalCount = Number(res.data.totalCount)
-      // console.log(this.List)
+      console.log(this.businessId)
     },
     // 处理设备运行状态： 0:未投放; 1-运营; 3-撤机
     formatterFn(row, column, cellValue, index) {
@@ -106,9 +115,23 @@ export default {
     },
     // 搜索功能
     async searchBtn() {
-      const res = await getEquipmentList({ innerCode: this.search })
-      // console.log(res)
-      this.List = res.data.currentPageRecords
+      try {
+        this.loading = true
+        const res = await getEquipmentList({ innerCode: this.search })
+        // console.log(res)
+        // 搜索隐藏分页框，因为设备编号唯一，只能搜到一项
+        if (res.data.totalCount === '0') {
+          this.$message.error('未搜索到设备，请输入正确的设备编码')
+        } else {
+          this.List = res.data.currentPageRecords
+          this.$message.success('搜索成功')
+        }
+      } catch (error) {
+        console.log(error)
+      } finally {
+        this.isShow = false
+        this.loading = false
+      }
     },
     // 新建功能
     addBtn() {
@@ -125,7 +148,7 @@ export default {
         this.dialogVisibled = true
       } else {
         this.policy = res.data
-        console.log(this.policy)
+        // console.log(this.policy)
         this.dialogVisibledd = true
       }
       this.innerCodeList = [val]
@@ -137,8 +160,15 @@ export default {
     // 修改设备
     changeEquipment(val) {
       console.log(val)
-      this.equipment = val
       this.dialogVisibleed = true
+      this.equipment = val
+    },
+    // 货道
+    async aisleBtn(val) {
+      const res = await getAisle(val)
+      console.log(res)
+      this.channelList = res.data
+      this.outerVisible = true
     }
   }
 }

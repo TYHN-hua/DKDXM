@@ -72,8 +72,7 @@ export default {
     return {
       value: '',
       pointList: [],
-      loading: false,
-      a: ''
+      loading: false
     }
   },
   methods: {

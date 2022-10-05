@@ -1,6 +1,6 @@
 // 设备状态 常量
 export default {
-  equipmentType: [
+  inventoryType: [
     {
       id: 0,
       value: '未投放'

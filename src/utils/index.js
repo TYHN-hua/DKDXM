@@ -115,3 +115,41 @@ export function param2Obj(url) {
   })
   return obj
 }
+
+// 获取当月1号日期
+export function getTime() {
+  const year = new Date().getFullYear()
+  const month = new Date().getMonth() + 1
+  const data = 1
+  return `${year}-0${month}-0${data}`
+}
+
+// 获取当天日期
+export function getNowTime() {
+  const year = new Date().getFullYear()
+  const month = new Date().getMonth() + 1
+  const data = new Date().getDate()
+  return `${year}-0${month}-0${data}`
+}
+
+// 获取当月1号日期及时间
+export function getTimeDate() {
+  const year = new Date().getFullYear()
+  const month = new Date().getMonth() + 1
+  const data = 1
+  const h = 0
+  const m = 0
+  const s = 0
+  return `${year}-0${month}-0${data} 0${h}:0${m}:0${s}`
+}
+
+// 获取当天日期及时间
+export function getNowTimeData() {
+  const year = new Date().getFullYear()
+  const month = new Date().getMonth() + 1
+  const data = new Date().getDate()
+  const h = 23
+  const m = 59
+  const s = 59
+  return `${year}-0${month}-0${data} ${h}:${m}:${s}`
+}
